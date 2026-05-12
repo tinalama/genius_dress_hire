@@ -6,4 +6,5 @@ dist
 coverage
 .DS_Store
 config/local.yml
+config/default.yml
 
