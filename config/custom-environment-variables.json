@@ -1,0 +1,24 @@
+{
+  "nodeEnv": "NODE_ENV",
+  "server": {
+    "port": "PORT",
+    "origin": "CORS_ORIGIN",
+    "apiPrefix": "API_PREFIX"
+  },
+  "db": {
+    "host": "DB_HOST",
+    "port": "DB_PORT",
+    "username": "DB_USERNAME",
+    "password": "DB_PASSWORD",
+    "database": "DB_NAME",
+    "synchronize": "DB_SYNCHRONIZE",
+    "logging": "DB_LOGGING"
+  },
+  "jwt": {
+    "secret": "JWT_SECRET",
+    "expiresIn": "JWT_EXPIRES_IN"
+  },
+  "app": {
+    "swaggerEnabled": "SWAGGER_ENABLED"
+  }
+}

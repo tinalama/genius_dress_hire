@@ -1,0 +1,46 @@
+# Single-API defaults (TTC-style sections; one server only — no frontend/supplier apps).
+# Secrets: use config/local.yml (gitignored) or env vars in custom-environment-variables.json
+#
+# DB: Defaults match a typical local Postgres superuser. If you see "role does not exist",
+# either create that role in Postgres or override db.username/db.password in config/local.yml
+# (e.g. MAMP/macOS often use your OS login name as the DB role).
+
+nodeEnv: development
+
+server:
+  port: 3000
+  origin: "http://localhost:3000"
+  apiPrefix: api
+
+db:
+  host: "localhost"
+  type: "postgres"
+  port: 5432
+  username: "ek_mac_44"
+  password: "postgres"
+  synchronize: false
+  database: "genius_dress_hire"
+
+# db:
+#   host: "your-remote-host"
+#   type: "postgres"
+#   port: 5432
+#   username: "user"
+#   password: "password"
+#   synchronize: false
+#   logging: false
+#   database: "other_db"
+
+jwt:
+  expiresIn: "7d"
+  secret: "change-me-min-16-chars!!"
+
+app:
+  fallbackLanguage: "en"
+  name: "genius-dress-hire"
+  version: "v0.1"
+  description: "Dress hire API"
+  appUrl: "http://localhost:3000"
+  frontendUrl: "http://localhost:3000"
+  sameSite: false
+  swaggerEnabled: true

@@ -1,0 +1,43 @@
+# Template: copy to config/local.yml for machine-specific overrides (gitignored).
+# Committed defaults live in config/default.yml.
+
+nodeEnv: development
+
+server:
+  port: 3000
+  origin: "http://localhost:3000"
+  apiPrefix: api
+
+db:
+  host: "localhost"
+  type: "postgres"
+  port: 5432
+  username: "postgres"
+  password: "postgres"
+  synchronize: false
+  logging: false
+  database: "genius_dress_hire"
+
+# db:
+#   host: "your-remote-host"
+#   type: "postgres"
+#   port: 5432
+#   username: "user"
+#   password: "password"
+#   synchronize: false
+#   logging: false
+#   database: "other_db"
+
+jwt:
+  expiresIn: "7d"
+  secret: "change-me-min-16-chars!!"
+
+app:
+  fallbackLanguage: "en"
+  name: "genius-dress-hire"
+  version: "v0.1"
+  description: "Dress hire API"
+  appUrl: "http://localhost:3000"
+  frontendUrl: "http://localhost:3000"
+  sameSite: false
+  swaggerEnabled: true

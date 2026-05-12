@@ -1,0 +1,5 @@
+# Normalize text files for consistent clones on macOS, Linux, and Windows (Git for Windows).
+* text=auto eol=lf
+
+# Windows batch/PowerShell scripts may use CRLF if you add them later
+*.{cmd,bat,ps1} text eol=crlf
