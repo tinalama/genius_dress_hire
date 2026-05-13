@@ -56,7 +56,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const body: ApiErrorBody = {
       success: false,
       statusCode: status,
-      message,
+      message: Array.isArray(message) ? message.join(', ') : message,
       ...(code && { code }),
       ...(errors && { errors }),
     };

@@ -1,43 +1,49 @@
 import {
-  type CallHandler,
-  type ExecutionContext,
   Injectable,
-  type NestInterceptor,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
 } from '@nestjs/common';
-import type { Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { ApiSuccessResponse } from '../interfaces/api-response.interface';
-import type { PaginatedResult } from '../interfaces/paginated-result.interface';
-
-function isPaginatedResult<T>(value: unknown): value is PaginatedResult<T> {
-  if (typeof value !== 'object' || value === null) {
-    return false;
-  }
-  const v = value as PaginatedResult<T>;
-  return Array.isArray(v.items) && v.meta !== undefined;
-}
 
 @Injectable()
 export class TransformResponseInterceptor implements NestInterceptor {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<ApiSuccessResponse<unknown>> {
+  ): Observable<any> {
     return next.handle().pipe(
-      map((data: unknown) => {
-        if (isPaginatedResult(data)) {
-          const result: ApiSuccessResponse<unknown[]> = {
+      map((response) => {
+        const message = response?.message || 'Success';
+        const data = response?.data !== undefined ? response.data : response;
+
+        // Handle paginated responses
+        if (response?.pagination || response?.meta?.pagination) {
+          return {
             success: true,
-            data: data.items,
-            meta: data.meta,
+            message,
+            data: response?.data || response?.items || data,
+            meta: {
+              api: {
+                version: '1.0.0',
+              },
+              paging: response?.pagination || response?.meta?.pagination,
+            },
           };
-          return result;
         }
-        const wrapped: ApiSuccessResponse<unknown> = {
+
+        // Standard response
+        return {
           success: true,
+          message,
           data,
+          meta: {
+            api: {
+              version: '1.0.0',
+            },
+          },
         };
-        return wrapped;
       }),
     );
   }

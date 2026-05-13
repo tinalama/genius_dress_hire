@@ -1,5 +1,8 @@
 import { SetMetadata } from '@nestjs/common';
-import { IS_PUBLIC_KEY } from '../constants/api.constants';
 
-export const Public = (): ReturnType<typeof SetMetadata> =>
-  SetMetadata(IS_PUBLIC_KEY, true);
+/**
+ * Decorator to mark routes as public (no authentication required)
+ * Usage: @Public()
+ */
+export const PUBLIC_ROUTE_KEY = 'isPublic';
+export const Public = () => SetMetadata(PUBLIC_ROUTE_KEY, true);

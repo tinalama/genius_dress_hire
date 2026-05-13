@@ -1,6 +1,9 @@
+/**
+ * Pagination metadata interface
+ */
 export interface PaginationMeta {
-  page: number;
-  limit: number;
+  currentPage: number;
+  itemsPerPage: number;
   totalItems: number;
   totalPages: number;
   hasNextPage: boolean;

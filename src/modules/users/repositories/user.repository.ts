@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ResourceNotFoundException } from '../../../common/exceptions/resource-not-found.exception';
-import { toPaginatedResult } from '../../../common/utils/pagination.util';
+import { PaginationUtil } from '../../../common/utils/pagination.util';
 import type { PaginatedResult } from '../../../common/interfaces/paginated-result.interface';
 import type { CreateUserDto } from '../dto/request/create-user.dto';
 import type { ListUsersQueryDto } from '../dto/request/list-users-query.dto';
@@ -69,7 +69,7 @@ export class UserRepository implements IUserRepository {
     qb.take(limit);
 
     const [items, total] = await qb.getManyAndCount();
-    return toPaginatedResult(items, page, limit, total);
+    return PaginationUtil.createPaginatedResult(items, total, page, limit);
   }
 
   async update(id: string, data: Partial<User>): Promise<User> {
