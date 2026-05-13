@@ -1,7 +1,7 @@
 import './config/load-env-first';
 import { resolve } from 'path';
 import { DataSource } from 'typeorm';
-import { User } from './modules/users/entities/user.entity';
+import { AdminUser } from './modules/auth/entities/admin-user.entity';
 
 export default new DataSource({
   type: 'postgres',
@@ -10,7 +10,7 @@ export default new DataSource({
   username: process.env['DB_USERNAME'] ?? 'postgres',
   password: process.env['DB_PASSWORD'] ?? 'postgres',
   database: process.env['DB_NAME'] ?? 'genius_dress_hire',
-  entities: [User],
+  entities: [AdminUser],
   migrations: [resolve(__dirname, 'database', 'migrations', '*.{ts,js}')],
   synchronize: false,
   logging: process.env['DB_LOGGING'] === 'true',

@@ -3,28 +3,33 @@
 ## Files Added from disaster-evacuation-node-api
 
 ### Core Infrastructure
+
 - ✅ `src/common/repository/base.repository.ts` - Enhanced CRUD operations with pagination, search
 - ✅ `src/common/entities/base.entity.ts` - UUID entity with timestamps (already existed)
 - ✅ `src/common/entities/audit.entity.ts` - Entity with audit fields (createdBy, updatedBy)
 
 ### Request Context (NEW)
+
 - ✅ `src/common/request-context/request-context.model.ts` - Context interfaces
 - ✅ `src/common/request-context/request-context.service.ts` - Request-scoped data storage
 - ✅ `src/common/request-context/request-context.middleware.ts` - Middleware initialization
 - ✅ `src/common/request-context/index.ts` - Exports
 
 ### Decorators
+
 - ✅ `src/common/decorators/current-user.decorator.ts` - Extract authenticated user
 - ✅ `src/common/decorators/public.decorator.ts` - Mark public routes
 - ✅ `src/common/decorators/roles.decorator.ts` - Specify required roles
 - ✅ `src/common/decorators/index.ts` - Exports
 
 ### Validators
+
 - ✅ `src/common/validators/date.validator.ts` - Date validations (future, past, date range)
 - ✅ `src/common/validators/unique.validator.ts` - Unique field validator
 - ✅ `src/common/validators/index.ts` - Exports
 
 ### Interceptors
+
 - ✅ `src/common/interceptors/trim.interceptor.ts` - Trim string values
 - ✅ `src/common/interceptors/logging.interceptor.ts` - API request/response logging
 - ✅ `src/common/interceptors/audit.interceptor.ts` - Audit trail for modifications
@@ -32,11 +37,13 @@
 - ✅ `src/common/interceptors/index.ts` - Exports
 
 ### Exceptions
+
 - ✅ `src/common/exceptions/business.exception.ts` - Business rule violations
 - ✅ `src/common/exceptions/not-found.exception.ts` - Resource not found
 - ✅ `src/common/exceptions/index.ts` - Exports
 
 ### Interfaces
+
 - ✅ `src/common/interfaces/api-response.interface.ts` - API response types
 - ✅ `src/common/interfaces/api-success-response.interface.ts` - Success response interface
 - ✅ `src/common/interfaces/search-filter.interface.ts` - Search filter types
@@ -46,15 +53,18 @@
 - ✅ `src/common/interfaces/api-success-response.interface.ts` - Success response (for interceptor)
 
 ### Utilities
+
 - ✅ `src/common/utils/pagination.util.ts` - Pagination helper functions
 
 ### Updated Files
+
 - ✅ `src/app.module.ts` - Added middleware and interceptors
 - ✅ `src/common/index.ts` - Central export file
 
 ## Changes Made to app.module.ts
 
 ### Added Middleware
+
 ```typescript
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
@@ -64,12 +74,14 @@ export class AppModule implements NestModule {
 ```
 
 ### Added Interceptors (executed in order)
+
 1. ✅ LoggingInterceptor - Logs all API requests
 2. ✅ AuditInterceptor - Creates audit logs
 3. ✅ TrimInterceptor - Trims string inputs
 4. ✅ TransformResponseInterceptor - Wraps responses
 
 ## Dependencies Added
+
 - ✅ uuid - UUID generation
 - ✅ @types/uuid - TypeScript types
 
@@ -223,7 +235,9 @@ export class CreateBookingDto {
 ## Interceptors Behavior
 
 ### LoggingInterceptor
+
 Logs every API call with:
+
 - Request ID
 - User ID
 - Method, URL, IP
@@ -232,7 +246,9 @@ Logs every API call with:
 - Duration
 
 ### AuditInterceptor
+
 Logs all state changes (POST, PUT, PATCH, DELETE):
+
 - Request ID
 - User ID
 - Action (method)
@@ -241,12 +257,16 @@ Logs all state changes (POST, PUT, PATCH, DELETE):
 - Result (success/failed)
 
 ### TrimInterceptor
+
 Automatically trims all string values in:
+
 - Request body
 - Query parameters
 
 ### TransformResponseInterceptor
+
 Wraps all responses:
+
 ```json
 {
   "success": true,
@@ -255,6 +275,7 @@ Wraps all responses:
 ```
 
 For paginated results:
+
 ```json
 {
   "success": true,
@@ -298,12 +319,14 @@ npm run start:dev
 ```
 
 Check the logs for:
+
 - ✅ Server starts without errors
 - ✅ RequestContextMiddleware initialized
 - ✅ All modules loaded
 - ✅ Database connected
 
 Then test API routes:
+
 ```bash
 # Register new user (public route)
 curl -X POST http://localhost:3000/api/auth/register \
