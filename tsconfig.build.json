@@ -1,4 +1,25 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+  "exclude": [
+    "node_modules",
+    "test",
+    "dist",
+    "**/*spec.ts",
+
+    "src/common-module/cache",
+    "src/common-module/decorators/ip-address.decorator.ts",
+    "src/common-module/exception/exception-filter.ts",
+    "src/common-module/filters",
+    "src/common-module/guard",
+    "src/common-module/helper",
+    "src/common-module/interceptors/api-logging-interceptor.ts",
+    "src/common-module/interceptors/cache.interceptor.ts",
+    "src/common-module/interceptors/transform.interceptor.ts",
+    "src/common-module/interceptors/trim.interceptor.ts",
+    "src/common-module/interfaces/common-dto.interface.ts",
+    "src/common-module/interfaces/common-service.interface.ts",
+    "src/common-module/repository",
+    "src/common-module/src",
+    "src/common-module/strategy"
+  ]
 }

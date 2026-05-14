@@ -15,7 +15,7 @@ export const envValidationSchema = Joi.object({
   DB_LOGGING: Joi.boolean().default(false),
   JWT_SECRET: Joi.string().min(16).required(),
   JWT_EXPIRES_IN: Joi.string().default('7d'),
-  API_PREFIX: Joi.string().default('api'),
+  API_PREFIX: Joi.string().default('api/v1'),
   SWAGGER_ENABLED: Joi.boolean().default(true),
 });
 

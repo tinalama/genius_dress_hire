@@ -8,7 +8,7 @@ import { AppModule } from './app.module';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
-  const globalPrefix = config.get<string>('API_PREFIX', 'api');
+  const globalPrefix = config.get<string>('API_PREFIX', 'api/v1');
   app.setGlobalPrefix(globalPrefix);
 
   app.useGlobalPipes(
@@ -38,7 +38,7 @@ async function bootstrap(): Promise<void> {
       )
       .build();
     const document = SwaggerModule.createDocument(app, swaggerConfig);
-    SwaggerModule.setup(`${globalPrefix}/docs`, app, document);
+    SwaggerModule.setup('api/docs', app, document);
   }
 
   const port = config.get<number>('PORT', 3000);

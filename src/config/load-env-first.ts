@@ -32,7 +32,7 @@ function applyYamlConfigToProcessEnv(): void {
   process.env.NODE_ENV = String(cfg('nodeEnv', 'development'));
 
   process.env.PORT = String(cfg('server.port', 3000));
-  process.env.API_PREFIX = String(cfg('server.apiPrefix', 'api'));
+  process.env.API_PREFIX = String(cfg('server.apiPrefix', 'api/v1'));
 
   if (nodeConfig.has('server.origin')) {
     process.env.CORS_ORIGIN = String(nodeConfig.get('server.origin'));

@@ -1,3 +1,7 @@
+// @ts-nocheck
+// Legacy reference copy from the TTC employee-panel project. Excluded from the
+// build via tsconfig(.build).json. Kept on disk for reference only — the
+// in-use strategy lives at src/modules/auth/strategy/jwt.strategy.ts.
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { HttpStatus, Injectable } from '@nestjs/common';

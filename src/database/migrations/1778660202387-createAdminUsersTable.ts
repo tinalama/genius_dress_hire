@@ -1,8 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableIndex } from "typeorm";
 
 export class CreateAdminUsersTable1778660202387
-  implements MigrationInterface
-{
+  implements MigrationInterface {
   tableName = "adminUsers";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -61,7 +60,7 @@ export class CreateAdminUsersTable1778660202387
           {
             name: "status",
             type: "boolean",
-            default: true,
+            default: false,
           },
           {
             name: "token",

@@ -2,6 +2,7 @@ import '../../config/load-env-first';
 import * as bcrypt from 'bcrypt';
 import AppDataSource from '../../ormconfig';
 import { AdminUser } from '../../modules/auth/entities/admin-user.entity';
+import { AdminUserStatusEnum } from '../../modules/auth/enums/admin-user-status.enum';
 
 async function seed(): Promise<void> {
   if (!AppDataSource.isInitialized) {
@@ -24,7 +25,7 @@ async function seed(): Promise<void> {
       salt,
       firstName: 'Admin',
       lastName: 'User',
-      status: true,
+      status: AdminUserStatusEnum.ACTIVE,
     }),
   );
   console.info('Seed completed: admin@example.com / ChangeMe123!');

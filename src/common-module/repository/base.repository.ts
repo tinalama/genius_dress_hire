@@ -20,7 +20,7 @@ import { StatusCodesList } from '../custom-constant/status-codes-list.constant';
  * Base Repository for code reuse
  */
 export class BaseRepository<
-  T,
+  T extends ObjectLiteral,
   K extends ModelSerializer
 > extends Repository<T> {
   /***
@@ -50,73 +50,72 @@ export class BaseRepository<
             )
           );
         }
-        return Promise.resolve(
-          entity ? this.transform(entity, transformOptions) : null
-        );
+        return this.transform(entity, transformOptions);
       })
       .catch((error) => Promise.reject(error));
   }
 
   /**
-   * find by condition
-   * @param fieldName
-   * @param value
-   * @param relations
-   * @param transformOptions
-   */
-  async findByCondition(
-    fieldName: string,
-    value: any,
-    relations: string[] = [],
-    transformOptions = {}
-  ): Promise<K | null> {
-    return await this.findOne({
-      where: {
-        [fieldName]: value
-      },
-      relations
-    } as any)
-      .then((entity) => {
-        if (!entity) {
-          return Promise.reject(new NotFoundException());
-        }
-        return Promise.resolve(
-          entity ? this.transform(entity, transformOptions) : null
-        );
-      })
-      .catch((error) => Promise.reject(error));
-  }
-
-  /**
-   * get count of entity by condition
-   * @param conditions
-   */
-  async countEntityByCondition(
-    conditions: ObjectLiteral = {}
-  ): Promise<number> {
-    return this.count({
-      where: conditions
-    } as any)
-      .then((count) => {
-        return Promise.resolve(count);
-      })
-      .catch((error) => Promise.reject(error));
-  }
-
-  /**
-   * get all entity with filters
+   * find all with pagination
    * @param searchFilter
    * @param relations
    * @param searchCriteria
    * @param transformOptions
    */
-  async findAll(
+  async paginate(
     searchFilter: DeepPartial<SearchFilterInterface>,
     relations: string[] = [],
-    searchCriteria: string[],
+    searchCriteria: string[] = [],
+    transformOptions = {}
+  ): Promise<Pagination<K>> {
+    const { page, limit, skip, keyword } = this.getPaginationInfo(searchFilter);
+    const order = await this.getOrder(searchFilter.sort);
+
+    const whereCondition: any[] = [];
+    if (searchFilter.hasOwnProperty('keyword') && searchFilter.keyword) {
+      for (const key of searchCriteria) {
+        whereCondition.push({
+          [key]: ILike(`%${searchFilter.keyword}%`)
+        });
+      }
+    }
+    const [results, total] = await this.findAndCount({
+      skip,
+      take: limit,
+      where: whereCondition.length > 0 ? whereCondition : undefined,
+      relations,
+      order: order as any
+    });
+
+    const serializedResult = this.transformMany(results, transformOptions);
+
+    return new Pagination<K>({
+      results: serializedResult,
+      paginationInfo: {
+        current_page: page,
+        per_page: limit,
+        total,
+        total_pages: Math.ceil(total / limit),
+        prevPage: page > 1 ? page - 1 : 0,
+        nextPage: total > skip + limit ? page + 1 : 0
+      }
+    });
+  }
+
+  /**
+   * find all with search filter
+   * @param searchFilter
+   * @param relations
+   * @param searchCriteria
+   * @param transformOptions
+   */
+  async search(
+    searchFilter: DeepPartial<SearchFilterInterface>,
+    relations: string[] = [],
+    searchCriteria: string[] = [],
     transformOptions = {}
   ): Promise<K[]> {
-    const whereCondition = [];
+    const whereCondition: any[] = [];
     if (searchFilter.hasOwnProperty('keyword') && searchFilter.keyword) {
       for (const key of searchCriteria) {
         whereCondition.push({
@@ -125,7 +124,7 @@ export class BaseRepository<
       }
     }
     const results = await this.find({
-      where: whereCondition,
+      where: whereCondition.length > 0 ? whereCondition : undefined,
       relations
     });
     return this.transformMany(results, transformOptions);
@@ -135,7 +134,7 @@ export class BaseRepository<
    * Get pagination Skip & limit
    * @param options
    */
-  getPaginationInfo(options): PaginationInfoInterface {
+  getPaginationInfo(options: any): PaginationInfoInterface {
     const page =
       typeof options.page !== 'undefined' && options.page > 0
         ? options.page
@@ -152,12 +151,12 @@ export class BaseRepository<
     };
   }
 
-  async getOrder(sort: string): Promise<Record<string, 'DESC' | 'ASC'> | null> {
+  async getOrder(sort?: string): Promise<Record<string, 'DESC' | 'ASC'>> {
     if (!sort) {
       return {};
     }
     const columns = Array.isArray(sort) ? sort : sort.split(',');
-    const order = {};
+    const order: Record<string, 'DESC' | 'ASC'> = {};
 
     for (const column of columns) {
       const key = column.startsWith('-')
@@ -171,53 +170,6 @@ export class BaseRepository<
   }
 
   /**
-   * Paginate data
-   * @param searchFilter
-   * @param relations
-   * @param searchCriteria
-   * @param transformOptions
-   */
-  async paginate(
-    searchFilter: DeepPartial<SearchFilterInterface>,
-    relations: string[] = [],
-    searchCriteria: string[] = [],
-    transformOptions = {}
-  ): Promise<Pagination<K>> {
-    const whereCondition = [];
-    const findOptions: FindManyOptions = {};
-    if (searchFilter.hasOwnProperty('keyword') && searchFilter.keyword) {
-      for (const key of searchCriteria) {
-        whereCondition.push({
-          [key]: ILike(`%${searchFilter.keyword}%`)
-        });
-      }
-    }
-    const paginationInfo: PaginationInfoInterface =
-      this.getPaginationInfo(searchFilter);
-    findOptions.relations = relations;
-    findOptions.skip = paginationInfo.skip;
-    findOptions.take = paginationInfo.limit;
-    if (whereCondition.length > 0) findOptions.where = whereCondition;
-    findOptions.order = {
-      createdAt: 'DESC'
-    };
-    const { page, skip, limit } = paginationInfo;
-    const [results, total] = await this.findAndCount(findOptions);
-    const serializedResult = this.transformMany(results, transformOptions);
-    return new Pagination<K>({
-      results: serializedResult,
-      paginationInfo: {
-        current_page: page,
-        per_page: limit,
-        total,
-        total_pages: Math.ceil(total / limit),
-        prevPage: page > 1 ? page - 1 : 0,
-        nextPage: total > skip + limit ? page + 1 : 0
-      }
-    });
-  }
-
-  /**
    * create new entity
    * @param inputs
    * @param relations
@@ -226,9 +178,23 @@ export class BaseRepository<
     inputs: DeepPartial<T>,
     relations: string[] = []
   ): Promise<K> {
-    return this.save(inputs)
-      .then(async (entity) => await this.get((entity as any).id, relations))
-      .catch((error) => Promise.reject(error));
+    const entity = await this.save(inputs);
+    if (!entity) {
+      throw new CustomHttpException(
+        'Failed to create entity',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        StatusCodesList.InternalServerError
+      );
+    }
+    const result = await this.get((entity as any).id, relations);
+    if (!result) {
+      throw new CustomHttpException(
+        'Failed to retrieve created entity',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        StatusCodesList.InternalServerError
+      );
+    }
+    return result;
   }
 
   /**
@@ -243,9 +209,16 @@ export class BaseRepository<
     relations: string[] = [],
     transformOptions = {}
   ): Promise<K> {
-    return this.update(entity.id, inputs)
-      .then(async () => await this.get(entity.id, relations, transformOptions))
-      .catch((error) => Promise.reject(error));
+    await this.update(entity.id, inputs);
+    const result = await this.get(entity.id, relations, transformOptions);
+    if (!result) {
+      throw new CustomHttpException(
+        'Failed to retrieve updated entity',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        StatusCodesList.InternalServerError
+      );
+    }
+    return result;
   }
 
   /**

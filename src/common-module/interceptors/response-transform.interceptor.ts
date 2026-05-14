@@ -18,8 +18,8 @@ export class ResponseTransformInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data: any) => {
         return {
-          meta,
-          data
+          data,
+          meta
         };
       })
     );
