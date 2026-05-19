@@ -30,15 +30,28 @@ async function bootstrap(): Promise<void> {
   if (config.get<boolean>('SWAGGER_ENABLED', true)) {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Enterprise API')
-      .setDescription('NestJS clean-architecture boilerplate')
+      .setDescription(
+        'NestJS API. **Protected routes:** `POST /auth/login` → copy `data.accessToken` → click **Authorize** (lock icon, top right) → paste token (no `Bearer ` prefix).',
+      )
       .setVersion('1.0')
       .addBearerAuth(
-        { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-        'access-token',
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description:
+            'Paste the accessToken from POST /auth/login (value only, without "Bearer ").',
+        },
+        'bearer',
       )
       .build();
     const document = SwaggerModule.createDocument(app, swaggerConfig);
-    SwaggerModule.setup('api/docs', app, document);
+    SwaggerModule.setup('api/docs', app, document, {
+      swaggerOptions: {
+        persistAuthorization: true,
+        docExpansion: 'list',
+      },
+    });
   }
 
   const port = config.get<number>('PORT', 3000);

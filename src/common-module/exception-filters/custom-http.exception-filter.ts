@@ -5,6 +5,7 @@ import {
   HttpStatus
 } from '@nestjs/common';
 import { Response } from 'express';
+import { API_RESPONSE_META } from '../constants/api-response-meta.constant';
 import { CustomHttpException } from '../exception/custom-http.exception';
 
 @Catch(CustomHttpException)
@@ -12,18 +13,15 @@ export class CustomHttpExceptionFilter implements ExceptionFilter<CustomHttpExce
   catch(exception: CustomHttpException, host: ArgumentsHost): any {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const meta = {
-      api: {
-        version: '0.0.1'
-      }
-    };
-    response.status(HttpStatus.BAD_REQUEST).json({
-      meta,
+    const statusCode = exception.getStatus();
+
+    response.status(statusCode).json({
       errors: {
         title: 'Invalid Data.',
-        code: HttpStatus.BAD_REQUEST,
-        detail: exception.message
-      }
+        code: statusCode,
+        detail: exception.message,
+      },
+      meta: API_RESPONSE_META,
     });
   }
 }

@@ -1,4 +1,5 @@
 {
+  "include": ["src/**/*"],
   "compilerOptions": {
     "module": "nodenext",
     "moduleResolution": "nodenext",
@@ -9,6 +10,7 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "allowSyntheticDefaultImports": true,
     "target": "ES2023",
     "sourceMap": true,
@@ -36,7 +38,6 @@
     "src/common-module/interceptors/cache.interceptor.ts",
     "src/common-module/interceptors/transform.interceptor.ts",
     "src/common-module/interceptors/trim.interceptor.ts",
-    "src/common-module/interfaces/common-dto.interface.ts",
     "src/common-module/interfaces/common-service.interface.ts",
     "src/common-module/repository",
     "src/common-module/src",

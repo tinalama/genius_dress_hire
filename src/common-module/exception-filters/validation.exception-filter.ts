@@ -6,6 +6,7 @@ import {
   UnprocessableEntityException
 } from '@nestjs/common';
 import { Response } from 'express';
+import { API_RESPONSE_META } from '../constants/api-response-meta.constant';
 
 @Catch(UnprocessableEntityException)
 export class ValidationExceptionFilter implements ExceptionFilter<UnprocessableEntityException> {
@@ -24,16 +25,11 @@ export class ValidationExceptionFilter implements ExceptionFilter<UnprocessableE
         });
       }
     }
-    const meta = {
-      api: {
-        version: '0.0.1'
-      }
-    };
     response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-      meta,
       title: exception.message,
       status: HttpStatus.UNPROCESSABLE_ENTITY,
-      errors
+      errors,
+      meta: API_RESPONSE_META,
     });
   }
 }

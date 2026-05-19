@@ -1,8 +1,14 @@
+import { Expose } from 'class-transformer';
+
 /**
  * model serializer
  */
 export class ModelSerializer {
-  id: number;
+  @Expose()
+  id!: number;
+
+  @Expose()
   _id?: string;
-  [key: string]: any;
+
+  [key: string]: unknown;
 }

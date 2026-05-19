@@ -23,7 +23,7 @@ export class AdminUserSerializer extends ModelSerializer {
   phoneNumber!: string | null;
 
   @Expose()
-  @ApiProperty({ type: String, enum: AdminUserStatusEnum, default: AdminUserStatusEnum.INACTIVE })
+  @ApiProperty({ type: String, enum: AdminUserStatusEnum, default: AdminUserStatusEnum.ACTIVE })
   status!: AdminUserStatusEnum;
 
   @Expose()

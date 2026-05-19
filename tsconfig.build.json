@@ -16,7 +16,6 @@
     "src/common-module/interceptors/cache.interceptor.ts",
     "src/common-module/interceptors/transform.interceptor.ts",
     "src/common-module/interceptors/trim.interceptor.ts",
-    "src/common-module/interfaces/common-dto.interface.ts",
     "src/common-module/interfaces/common-service.interface.ts",
     "src/common-module/repository",
     "src/common-module/src",

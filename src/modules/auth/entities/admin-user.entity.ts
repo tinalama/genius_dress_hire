@@ -95,7 +95,7 @@ export class AdminUser {
   @Column({
     name: 'status',
     type: 'boolean',
-    default: false,
+    default: true,
     transformer: {
       to(value: AdminUserStatusEnum): boolean {
         return value === AdminUserStatusEnum.ACTIVE;

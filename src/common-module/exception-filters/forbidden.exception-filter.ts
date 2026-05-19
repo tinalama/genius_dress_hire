@@ -5,6 +5,7 @@ import {
   HttpStatus
 } from '@nestjs/common';
 import { Response } from 'express';
+import { API_RESPONSE_META } from '../constants/api-response-meta.constant';
 import { ForbiddenException } from '../exception/forbidden.exception';
 
 @Catch(ForbiddenException)
@@ -12,18 +13,13 @@ export class ForbiddenExceptionFilter implements ExceptionFilter<ForbiddenExcept
   catch(exception: ForbiddenException, host: ArgumentsHost): any {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const meta = {
-      api: {
-        version: '0.0.1'
-      }
-    };
     response.status(HttpStatus.FORBIDDEN).json({
-      meta,
       errors: {
         title: 'forbidden resource',
         code: HttpStatus.FORBIDDEN,
-        detail: exception.message
-      }
+        detail: exception.message,
+      },
+      meta: API_RESPONSE_META,
     });
   }
 }
